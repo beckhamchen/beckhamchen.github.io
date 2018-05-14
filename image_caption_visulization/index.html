@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>test image caption results visualization</title>
+	<script src="jquery-1.8.3.min.js"></script>
+	<script src="./vis_td_rl.js" type="text/javascript"></script>
+	<script src="./vis_td_CondGAN.js" type="text/javascript"></script>
+	<script src="./vis_td_RNNCondGAN.js" type="text/javascript"></script>
+	<style>
+		body {
+			background: #000;
+			margin: 0;
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+			font-weight: 200;
+		}
+
+		.result {
+			background: no-repeat center/contain #141414;
+			color: #fff;
+			height: 15vw;
+			position: relative;
+			width: 23vw;
+			display: inline-block;
+			margin: 5px;
+		}
+
+		.result:nth-child(2n+1) {
+			background-color: #181818;
+		}
+
+		.result p {
+			background: rgba(0, 0, 0, .5);
+			box-sizing: border-box;
+			margin: 0;
+			padding: 2px 5px;
+			text-shadow: 0 1px 1px #000;
+			width: 100%;
+		}
+		.result span {
+			background: #000;
+		}
+
+		#results {
+			margin: 1.5vw auto;
+			width: 96vw;
+		}
+
+		div.caption {
+			position: absolute;
+			width: 100%;
+			left: 0;
+			bottom: 0;
+		}
+		div.caption p:nth-child(1) {
+			color: #CE4052;
+		}
+		div.caption p:nth-child(2) {
+			color: #89CA6D;
+		}
+		div.caption p:nth-child(3) {
+			color: #D8985F;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="results"></div>
+	<script>
+		function loadVisible() {
+			var top = $(document).scrollTop(), bottom = top + $(window).height();
+			var results = $('#results > div')
+			for (var i = 0; i < results.length; i++) {
+				var div = results.eq(i);
+				var y1 = div.position().top, y2 = y1 + div.height();
+				if (y1 > bottom || y2 < top) {
+					div.css('background-image', '');
+					continue;
+				}
+				div.css('background-image', 'url(' + div.data('image') + ')');
+			}
+		}
+		$(window).scroll(loadVisible);
+		//$.getJSON('vis.json?t=' + +new Date, function (data) {
+		$('#results').html('');
+		data.sort(function(x, y) { return x - y })
+		data1.sort(function(x, y) { return x - y })
+		data2.sort(function(x, y) { return x - y })
+		
+		for (var i = 0; i < data.length; i++) {
+			var path = 'imgs/img' + (i + 1) + '.jpg';
+			if(data[i].image_id === data1[i].image_id && data[i].image_id === data2[i].image_id) {
+				$('<div class="result">')
+				.data('image', path)
+				.append($('<span>').text(data[i].image_id))
+				.append($('<div class="caption">').html('<p>' + data[i].caption + '</p>' 
+					+ '<p>' + data1[i].caption + '</p>' + '<p>' + data2[i].caption + '</p>'))
+				.appendTo('#results');
+			} else {
+				alert('数据' + data[i].image_id + '异常')
+			}
+		}
+		loadVisible();
+    //});
+	</script>
+</body>
+
+</html>
